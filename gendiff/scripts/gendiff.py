@@ -1,9 +1,20 @@
-from gendiff import generate_diff, parse_args, read_files
+from gendiff import (
+    generate_diff,
+    is_json_files,
+    parse_args,
+    read_json_files,
+    read_yaml_files,
+)
 
 
 def main():
     args = parse_args()
-    file1, file2 = read_files(args)
+
+    if is_json_files(args):
+        file1, file2 = read_json_files(args)
+    else:
+        file1, file2 = read_yaml_files(args)
+
     print(generate_diff(file1, file2))
 
 

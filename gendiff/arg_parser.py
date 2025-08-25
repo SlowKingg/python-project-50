@@ -1,6 +1,12 @@
 import argparse
 
 
+def is_json_files(args):
+    return args.first_file.endswith(".json") and args.second_file.endswith(
+        ".json"
+    )
+
+
 def parse_args():
     parser = argparse.ArgumentParser(
         description="Compares two configuration files and shows a difference."
