@@ -1,9 +1,17 @@
 import json
 
+import yaml
 
-def read_files(args):  # pragma: no cover
+
+def read_json_files(args):  # pragma: no cover
     file1 = json.load(open(args.first_file))
     file2 = json.load(open(args.second_file))
+    return file1, file2
+
+
+def read_yaml_files(args):  # pragma: no cover
+    file1 = yaml.safe_load(open(args.first_file))
+    file2 = yaml.safe_load(open(args.first_file))
     return file1, file2
 
 
