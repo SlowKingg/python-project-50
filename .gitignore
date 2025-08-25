@@ -4,5 +4,3 @@ __pycache__
 .vscode
 dist
 .ruff_cache
-.coverage
-coverage.xml
