@@ -1,18 +1,8 @@
-import json
-
-import yaml
-
-
-def read_file(file_path):  # pragma: no cover
-    if file_path.endswith(".json"):
-        file = json.load(open(file_path))
-    else:
-        file = yaml.safe_load(open(file_path))
-    return file
+from .parser import parse_file
 
 
 def generate_diff(file_path1, file_path2):
-    file1, file2 = read_file(file_path1), read_file(file_path2)
+    file1, file2 = parse_file(file_path1), parse_file(file_path2)
 
     result = ""
     all_keys = sorted(set(file1.keys()) | set(file2.keys()))

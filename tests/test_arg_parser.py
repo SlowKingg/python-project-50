@@ -1,6 +1,6 @@
 import sys
 
-from gendiff.arg_parser import parse_args
+from gendiff import parse_args
 
 
 def test_parse_args(monkeypatch):
