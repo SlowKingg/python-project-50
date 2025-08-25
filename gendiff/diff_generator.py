@@ -3,19 +3,17 @@ import json
 import yaml
 
 
-def read_json_files(args):  # pragma: no cover
-    file1 = json.load(open(args.first_file))
-    file2 = json.load(open(args.second_file))
-    return file1, file2
+def read_file(file_path):  # pragma: no cover
+    if file_path.endswith(".json"):
+        file = json.load(open(file_path))
+    else:
+        file = yaml.safe_load(open(file_path))
+    return file
 
 
-def read_yaml_files(args):  # pragma: no cover
-    file1 = yaml.safe_load(open(args.first_file))
-    file2 = yaml.safe_load(open(args.first_file))
-    return file1, file2
+def generate_diff(file_path1, file_path2):
+    file1, file2 = read_file(file_path1), read_file(file_path2)
 
-
-def generate_diff(file1, file2):
     result = ""
     all_keys = sorted(set(file1.keys()) | set(file2.keys()))
     for key in all_keys:
