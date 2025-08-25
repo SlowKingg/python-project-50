@@ -1,4 +1,11 @@
 import argparse
+import json
+
+
+def read_files(args):
+    file1 = json.load(open(args.first_file))
+    file2 = json.load(open(args.second_file))
+    return file1, file2
 
 
 def main():
@@ -11,8 +18,10 @@ def main():
 
     args = parser.parse_args()
 
-    # print(f"first_file = {args.first_file}")
-    # print(f"second_file = {args.second_file}")
+    file1, file2 = read_files(args)
+    
+    print(file1)
+    print(file2)
 
 
 if __name__ == "__main__":
