@@ -18,13 +18,28 @@ def read_files(args):
     return file1, file2
 
 
+def generate_diff(file1, file2):
+    result = ""
+    all_keys = sorted(set(file1.keys()) | set(file2.keys()))
+    for key in all_keys:
+        if key in file1 and key in file2:
+            if file1[key] == file2[key]:
+                result += f"  {key}: {file1[key]}\n"
+            else:
+                result += f"- {key}: {file1[key]}\n+ {key}: {file2[key]}\n"
+        elif key in file1:
+            result += f"- {key}: {file1[key]}\n"
+        else:
+            result += f"+ {key}: {file2[key]}\n"
+    return "{\n" + result + "}"
+
+
 def main():
     args = parse_args()
 
     file1, file2 = read_files(args)
 
-    print(file1)
-    print(file2)
+    print(generate_diff(file1, file2))
 
 
 if __name__ == "__main__":
