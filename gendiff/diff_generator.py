@@ -62,58 +62,62 @@ def build_diff(dict1, dict2):
     return diff
 
 
+def make_line_stylish(key, value, depth, sign=None):
+    indent = SPACE * (
+        depth + (SPACES_COUNT_FOR_SIGNS if sign else SPACES_COUNT)
+    )
+    sign_str = sign if sign else ""
+    return f"{indent}{sign_str}{key}: {value}"
+
+
+def handle_node_stylish(key, node, depth, make_line_func, iter_func):
+    match node:
+        case {"status": "added", "value": v}:
+            return make_line_func(
+                key, iter_func(v, depth + SPACES_COUNT), depth, PLUS
+            )
+        case {"status": "deleted", "value": v}:
+            return make_line_func(
+                key, iter_func(v, depth + SPACES_COUNT), depth, MINUS
+            )
+        case {"status": "changed", "old_value": ov, "new_value": nv}:
+            line1 = make_line_func(
+                key, iter_func(ov, depth + SPACES_COUNT), depth, MINUS
+            )
+            line2 = make_line_func(
+                key, iter_func(nv, depth + SPACES_COUNT), depth, PLUS
+            )
+            return f"{line1}\n{line2}"
+        case {"status": "unchanged", "value": v}:
+            return make_line_func(
+                key, iter_func(v, depth + SPACES_COUNT), depth
+            )
+        case _:
+            return make_line_func(
+                key, iter_func(node, depth + SPACES_COUNT), depth
+            )
+
+
 def generate_stylish(diff):
     def iter_(current_value, depth):
         if not isinstance(current_value, dict):
             return format(current_value)
 
-        deep_indent = SPACE * (depth + SPACES_COUNT)
-        sign_indent = SPACE * (depth + SPACES_COUNT_FOR_SIGNS)
         current_indent = SPACE * depth
         lines = []
 
         for key, val in current_value.items():
             if isinstance(val, dict) and "status" in val:
-                match val:
-                    case {"status": "added", "value": v}:
-                        lines.append(
-                            (
-                                f"{sign_indent}{PLUS}{key}: "
-                                f"{iter_(v, (depth + SPACES_COUNT))}"
-                            )
-                        )
-                    case {"status": "deleted", "value": v}:
-                        lines.append(
-                            (
-                                f"{sign_indent}{MINUS}{key}: "
-                                f"{iter_(v, (depth + SPACES_COUNT))}"
-                            )
-                        )
-                    case {
-                        "status": "changed",
-                        "old_value": ov,
-                        "new_value": nv,
-                    }:
-                        lines.append(
-                            (
-                                f"{sign_indent}{MINUS}{key}: "
-                                f"{iter_(ov, (depth + SPACES_COUNT))}"
-                            )
-                        )
-                        lines.append(
-                            (
-                                f"{sign_indent}{PLUS}{key}: "
-                                f"{iter_(nv, (depth + SPACES_COUNT))}"
-                            )
-                        )
-                    case {"status": "unchanged", "value": v}:
-                        lines.append(
-                            f"{deep_indent}{key}: "
-                            f"{iter_(v, (depth + SPACES_COUNT))}"
-                        )
+                lines.append(
+                    handle_node_stylish(
+                        key, val, depth, make_line_stylish, iter_
+                    )
+                )
             else:
                 lines.append(
-                    f"{deep_indent}{key}: {iter_(val, (depth + SPACES_COUNT))}"
+                    make_line_stylish(
+                        key, iter_(val, depth + SPACES_COUNT), depth
+                    )
                 )
 
         result = itertools.chain("{", lines, [current_indent + "}"])
