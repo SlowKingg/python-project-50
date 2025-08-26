@@ -77,11 +77,17 @@ def generate_stylish(diff):
                 match val:
                     case {"status": "added", "value": v}:
                         lines.append(
-                            f"{sign_indent}{PLUS}{key}: {iter_(v, (depth + SPACES_COUNT))}"
+                            (
+                                f"{sign_indent}{PLUS}{key}: "
+                                f"{iter_(v, (depth + SPACES_COUNT))}"
+                            )
                         )
                     case {"status": "deleted", "value": v}:
                         lines.append(
-                            f"{sign_indent}{MINUS}{key}: {iter_(v, (depth + SPACES_COUNT))}"
+                            (
+                                f"{sign_indent}{MINUS}{key}: "
+                                f"{iter_(v, (depth + SPACES_COUNT))}"
+                            )
                         )
                     case {
                         "status": "changed",
@@ -89,14 +95,21 @@ def generate_stylish(diff):
                         "new_value": nv,
                     }:
                         lines.append(
-                            f"{sign_indent}{MINUS}{key}: {iter_(ov, (depth + SPACES_COUNT))}"
+                            (
+                                f"{sign_indent}{MINUS}{key}: "
+                                f"{iter_(ov, (depth + SPACES_COUNT))}"
+                            )
                         )
                         lines.append(
-                            f"{sign_indent}{PLUS}{key}: {iter_(nv, (depth + SPACES_COUNT))}"
+                            (
+                                f"{sign_indent}{PLUS}{key}: "
+                                f"{iter_(nv, (depth + SPACES_COUNT))}"
+                            )
                         )
                     case {"status": "unchanged", "value": v}:
                         lines.append(
-                            f"{deep_indent}{key}: {iter_(v, (depth + SPACES_COUNT))}"
+                            f"{deep_indent}{key}: "
+                            f"{iter_(v, (depth + SPACES_COUNT))}"
                         )
             else:
                 lines.append(
