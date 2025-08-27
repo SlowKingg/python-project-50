@@ -135,5 +135,5 @@ def generate_plain(diff):
     return iter_(diff, "")
 
 
-def generate_json(diff):
+def generate_json(diff):  # pragma: no cover
     return json.dumps(diff)
