@@ -46,7 +46,10 @@ def build_diff(dict1, dict2):
                 "value": dict1[key],
             }
         elif isinstance(dict1[key], dict) and isinstance(dict2[key], dict):
-            diff[key] = build_diff(dict1[key], dict2[key])
+            diff[key] = {
+                "status": "nested",
+                "value": build_diff(dict1[key], dict2[key]),
+            }
         elif dict1[key] != dict2[key]:
             diff[key] = {
                 "status": "changed",
@@ -72,6 +75,10 @@ def make_line_stylish(key, value, depth, sign=None):
 
 def handle_node_stylish(key, node, depth, make_line_func, iter_func):
     match node:
+        case {"status": "nested", "value": v}:
+            return make_line_func(
+                key, iter_func(v, depth + SPACES_COUNT), depth
+            )
         case {"status": "added", "value": v}:
             return make_line_func(
                 key, iter_func(v, depth + SPACES_COUNT), depth, PLUS
@@ -107,18 +114,9 @@ def generate_stylish(diff):
         lines = []
 
         for key, val in current_value.items():
-            if isinstance(val, dict) and "status" in val:
-                lines.append(
-                    handle_node_stylish(
-                        key, val, depth, make_line_stylish, iter_
-                    )
-                )
-            else:
-                lines.append(
-                    make_line_stylish(
-                        key, iter_(val, depth + SPACES_COUNT), depth
-                    )
-                )
+            lines.append(
+                handle_node_stylish(key, val, depth, make_line_stylish, iter_)
+            )
 
         result = itertools.chain("{", lines, [current_indent + "}"])
         return "\n".join(result)
