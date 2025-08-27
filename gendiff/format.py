@@ -1,4 +1,5 @@
 import itertools
+import json
 
 SPACE = " "
 MINUS = "- "
@@ -130,3 +131,7 @@ def generate_plain(diff):
         return "\n".join(lines)
 
     return iter_(diff, "")
+
+
+def generate_json(diff):
+    return json.dumps(diff)

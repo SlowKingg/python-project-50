@@ -5,7 +5,7 @@ from .diff_node import (
     make_diff_node_nested,
     make_diff_node_unchanged,
 )
-from .format import generate_plain, generate_stylish
+from .format import generate_json, generate_plain, generate_stylish
 from .parser import parse_file
 
 
@@ -40,5 +40,5 @@ def generate_diff(file_path1, file_path2, format_name="stylish"):
             return generate_stylish(diff)
         case "plain":
             return generate_plain(diff)
-        # case "json":
-        #     return generate_json(diff)
+        case "json":
+            return generate_json(diff)
