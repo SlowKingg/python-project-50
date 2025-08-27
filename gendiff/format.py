@@ -107,7 +107,7 @@ def generate_plain(diff):
                             f"{format(v, plain=True)}"
                         )
                     )
-                case {"status": "deleted", "value": v}:
+                case {"status": "deleted"}:
                     lines.append(
                         f"Property '{path}.{key}' was removed"
                         if path
