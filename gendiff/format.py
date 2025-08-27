@@ -18,6 +18,8 @@ def format(data, plain=False):
         case None:
             return "null"
         case _:
+            if isinstance(data, int) or isinstance(data, float):
+                return str(data)
             return f"'{str(data)}'" if plain else str(data)
 
 
