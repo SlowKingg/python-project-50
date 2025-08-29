@@ -69,13 +69,14 @@ def generate_stylish(diff):
         if not isinstance(current_value, dict):
             return format(current_value)
 
-        current_indent = SPACE * depth
         lines = []
 
         for key, node in current_value.items():
             lines.append(format_node_stylish(depth, key, node, iter_))
 
+        current_indent = SPACE * depth
         result = itertools.chain("{", lines, [current_indent + "}"])
+
         return "\n".join(result)
 
     return iter_(diff, 0)
@@ -98,6 +99,8 @@ def format_node_plain(path, node, iter_):
                 f"From {format(ov, plain=True)} "
                 f"to {format(nv, plain=True)}"
             )
+        case _:  # case unchanged
+            return None
 
 
 def generate_plain(diff):
