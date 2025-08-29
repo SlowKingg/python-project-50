@@ -32,24 +32,21 @@ def make_line_stylish(key, value, depth, sign=None):
     return f"{indent}{sign_str}{key}: {value}"
 
 
-def format_node_stylish(depth, lines, key, node, iter_):
+def format_node_stylish(depth, key, node, iter_):
     match node:
         case {"status": "nested", "value": v}:
-            lines.append(
-                make_line_stylish(key, iter_(v, depth + SPACES_COUNT), depth)
-            )
+            return make_line_stylish(key, iter_(v, depth + SPACES_COUNT), depth)
+
         case {"status": "added", "value": v}:
-            lines.append(
-                make_line_stylish(
-                    key, iter_(v, depth + SPACES_COUNT), depth, PLUS
-                )
+            return make_line_stylish(
+                key, iter_(v, depth + SPACES_COUNT), depth, PLUS
             )
+
         case {"status": "deleted", "value": v}:
-            lines.append(
-                make_line_stylish(
-                    key, iter_(v, depth + SPACES_COUNT), depth, MINUS
-                )
+            return make_line_stylish(
+                key, iter_(v, depth + SPACES_COUNT), depth, MINUS
             )
+
         case {"status": "changed", "old_value": ov, "new_value": nv}:
             line1 = make_line_stylish(
                 key, iter_(ov, depth + SPACES_COUNT), depth, MINUS
@@ -57,14 +54,13 @@ def format_node_stylish(depth, lines, key, node, iter_):
             line2 = make_line_stylish(
                 key, iter_(nv, depth + SPACES_COUNT), depth, PLUS
             )
-            lines.append(f"{line1}\n{line2}")
+            return f"{line1}\n{line2}"
         case {"status": "unchanged", "value": v}:
-            lines.append(
-                make_line_stylish(key, iter_(v, depth + SPACES_COUNT), depth)
-            )
+            return make_line_stylish(key, iter_(v, depth + SPACES_COUNT), depth)
+
         case _:
-            lines.append(
-                make_line_stylish(key, iter_(node, depth + SPACES_COUNT), depth)
+            return make_line_stylish(
+                key, iter_(node, depth + SPACES_COUNT), depth
             )
 
 
@@ -77,7 +73,7 @@ def generate_stylish(diff):
         lines = []
 
         for key, node in current_value.items():
-            format_node_stylish(depth, lines, key, node, iter_)
+            lines.append(format_node_stylish(depth, key, node, iter_))
 
         result = itertools.chain("{", lines, [current_indent + "}"])
         return "\n".join(result)
@@ -85,41 +81,22 @@ def generate_stylish(diff):
     return iter_(diff, 0)
 
 
-def format_node_plain(path, lines, key, node, iter_):
+def format_node_plain(path, node, iter_):
     match node:
         case {"status": "nested", "value": v}:
-            lines.append(iter_(v, f"{path}.{key}" if path else key))
+            return iter_(v, path)
         case {"status": "added", "value": v}:
-            lines.append(
-                (
-                    f"Property '{path}.{key}' was added with value: "
-                    f"{format(v, plain=True)}"
-                )
-                if path
-                else (
-                    f"Property '{key}' was added with value: "
-                    f"{format(v, plain=True)}"
-                )
+            return (
+                f"Property '{path}' was added with value: "
+                f"{format(v, plain=True)}"
             )
         case {"status": "deleted"}:
-            lines.append(
-                f"Property '{path}.{key}' was removed"
-                if path
-                else f"Property '{key}' was removed"
-            )
+            return f"Property '{path}' was removed"
         case {"status": "changed", "old_value": ov, "new_value": nv}:
-            lines.append(
-                (
-                    f"Property '{path}.{key}' was updated. "
-                    f"From {format(ov, plain=True)} "
-                    f"to {format(nv, plain=True)}"
-                )
-                if path
-                else (
-                    f"Property '{key}' was updated. "
-                    f"From {format(ov, plain=True)} "
-                    f"to {format(nv, plain=True)}"
-                )
+            return (
+                f"Property '{path}' was updated. "
+                f"From {format(ov, plain=True)} "
+                f"to {format(nv, plain=True)}"
             )
 
 
@@ -128,7 +105,12 @@ def generate_plain(diff):
         lines = []
 
         for key, node in current_value.items():
-            format_node_plain(path, lines, key, node, iter_)
+            full_path = f"{path}.{key}" if path else key
+
+            line = format_node_plain(full_path, node, iter_)
+
+            if line:
+                lines.append(line)
 
         return "\n".join(lines)
 
