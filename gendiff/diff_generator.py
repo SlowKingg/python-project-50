@@ -5,8 +5,10 @@ from .diff_node import (
     make_diff_node_nested,
     make_diff_node_unchanged,
 )
-from .format import generate_json, generate_plain, generate_stylish
+from .json_formatter import generate_json
 from .parser import parse_file
+from .plain_formatter import generate_plain
+from .stylish_formatter import generate_stylish
 
 
 def build_diff(dict1, dict2):
