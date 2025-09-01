@@ -1,5 +1,5 @@
+from gendiff.file_parser import parse_file
 from gendiff.json_formatter import generate_json
-from gendiff.parser import parse_file
 from gendiff.plain_formatter import generate_plain
 from gendiff.stylish_formatter import generate_stylish
 
