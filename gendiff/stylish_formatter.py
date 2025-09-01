@@ -20,7 +20,7 @@ def make_line_stylish(key, value, depth, sign=None):
 def format_node_stylish(depth, key, node, iter_):
     status = node["status"]
 
-    if status == "nested":
+    if status == "nested" or status == "unchanged":
         return make_line_stylish(
             key, iter_(node["value"], depth + SPACES_COUNT), depth
         )
@@ -43,10 +43,6 @@ def format_node_stylish(depth, key, node, iter_):
             key, iter_(node["new_value"], depth + SPACES_COUNT), depth, PLUS
         )
         return f"{line1}\n{line2}"
-    elif status == "unchanged":
-        return make_line_stylish(
-            key, iter_(node["value"], depth + SPACES_COUNT), depth
-        )
 
 
 def generate_stylish(diff):
