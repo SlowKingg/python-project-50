@@ -1,14 +1,27 @@
-from gendiff.diff_node import (
-    make_diff_node_added,
-    make_diff_node_changed,
-    make_diff_node_deleted,
-    make_diff_node_nested,
-    make_diff_node_unchanged,
-)
 from gendiff.json_formatter import generate_json
 from gendiff.parser import parse_file
 from gendiff.plain_formatter import generate_plain
 from gendiff.stylish_formatter import generate_stylish
+
+
+def make_diff_node_added(value):
+    return {"status": "added", "value": value}
+
+
+def make_diff_node_deleted(value):
+    return {"status": "deleted", "value": value}
+
+
+def make_diff_node_changed(old_value, new_value):
+    return {"status": "changed", "old_value": old_value, "new_value": new_value}
+
+
+def make_diff_node_unchanged(value):
+    return {"status": "unchanged", "value": value}
+
+
+def make_diff_node_nested(value):
+    return {"status": "nested", "value": value}
 
 
 def build_diff(dict1, dict2):
