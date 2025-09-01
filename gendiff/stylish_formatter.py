@@ -1,6 +1,6 @@
 import itertools
 
-from .format import format
+from gendiff.format import format
 
 SPACE = " "
 MINUS = "- "

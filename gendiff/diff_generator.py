@@ -1,14 +1,14 @@
-from .diff_node import (
+from gendiff.diff_node import (
     make_diff_node_added,
     make_diff_node_changed,
     make_diff_node_deleted,
     make_diff_node_nested,
     make_diff_node_unchanged,
 )
-from .json_formatter import generate_json
-from .parser import parse_file
-from .plain_formatter import generate_plain
-from .stylish_formatter import generate_stylish
+from gendiff.json_formatter import generate_json
+from gendiff.parser import parse_file
+from gendiff.plain_formatter import generate_plain
+from gendiff.stylish_formatter import generate_stylish
 
 
 def build_diff(dict1, dict2):
