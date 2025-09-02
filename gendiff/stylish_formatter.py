@@ -10,6 +10,20 @@ SPACES_COUNT_FOR_SIGNS = 2
 
 
 def make_line_stylish(key, value, depth, sign=None):
+    """
+    Formats a single line for the stylish diff output.
+
+    Args:
+        key (str): The key to display in the diff line.
+        value (Any): The value associated with the key.
+        depth (int): The current depth in the diff tree, used for indentation.
+        sign (str, optional): A sign to indicate the type of change
+                            ('+', '-', or None). Defaults to None.
+
+    Returns:
+        str: A formatted string representing a line in the stylish diff output.
+    """
+
     indent = SPACE * (
         depth + (SPACES_COUNT_FOR_SIGNS if sign else SPACES_COUNT)
     )
@@ -46,6 +60,27 @@ def format_node_stylish(depth, key, node, iter_):
 
 
 def generate_stylish(diff):
+    """
+    Generates a diff representation in a stylish (tree-like) format.
+
+    Args:
+        diff (dict): A dictionary representing the difference.
+
+    Returns:
+        str: The formatted diff as a string in stylish format.
+
+    Example:
+        >>> diff = {'key': {'status': 'added', 'value': 42}}
+        >>> print(generate_stylish(diff))
+        {
+          + key: 42
+        }
+
+    Note:
+        This function relies on an external `format_node_stylish` function
+        to format each node in the diff tree.
+    """
+
     def iter_(current_value, depth):
         if not isinstance(current_value, dict):
             return format(current_value)
