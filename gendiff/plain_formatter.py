@@ -23,6 +23,22 @@ def format_node_plain(path, node, iter_):
 
 
 def generate_plain(diff):
+    """
+    Generates a plain text representation
+    of the differences between two data structures.
+
+    Args:
+        diff (dict): A dictionary representing the difference.
+
+    Returns:
+        str: A plain text string describing the differences
+            in a human-readable format.
+
+    Note:
+        This function relies on an external `format_node_plain` function
+        to format each node in the diff tree.
+    """
+
     def iter_(current_value, path):
         lines = []
 
