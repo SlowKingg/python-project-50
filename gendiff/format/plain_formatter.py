@@ -1,4 +1,4 @@
-from gendiff.format import format
+from gendiff.format.format import format
 
 
 def format_node_plain(path, node, iter_):

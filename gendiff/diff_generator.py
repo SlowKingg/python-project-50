@@ -1,7 +1,5 @@
-from gendiff.file_parser import parse_file
-from gendiff.json_formatter import generate_json
-from gendiff.plain_formatter import generate_plain
-from gendiff.stylish_formatter import generate_stylish
+from gendiff.format import generate_json, generate_plain, generate_stylish
+from gendiff.parsers import parse_file
 
 
 def make_diff_node_added(value):
